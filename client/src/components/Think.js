@@ -7,7 +7,7 @@ class Think extends Component {
         const formattedDate = format(new Date(think.date), 'dd/MM/yyyy HH:mm:ss');
 
         return (
-            <li>
+            <li className='thinkLine'>
                 <span>{formattedDate}</span>
                 <p>{think.message}</p>
             </li>

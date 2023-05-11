@@ -7,16 +7,14 @@ use App\Entity\Think;
 use App\Repository\ThinkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ThougthsController extends AbstractController
 {
-    #[Route('/api/new_think', name: 'app_thougths')]
+    #[Route('/api/thoughts/new', name: 'app_thougths')]
     public function newThink(Request $request,EntityManagerInterface $em): JsonResponse
     {
         $think = new Think();
@@ -35,7 +33,7 @@ class ThougthsController extends AbstractController
     }
 
     #[Route('api/thoughts/list')]
-    public function thoughts(ThinkRepository $thinkRepository,SerializerInterface $serializer){
+    public function thoughts(ThinkRepository $thinkRepository){
         $thoughts = $thinkRepository->findAll();
 
 

@@ -19,7 +19,7 @@ class ThougthsController extends AbstractController
     {
         $think = new Think();
         $data = trim($request->getContent());
-        if($data != null && strlen($data) > 4 ){
+        if($data != null && strlen($data) > 2 ){
             $think->setMessage($data);
             $think->setDate(new DateTime());
             $em->persist($think);
@@ -31,7 +31,7 @@ class ThougthsController extends AbstractController
             'status' => $data
         ]);
     }
-
+    
     #[Route('api/thoughts/list')]
     public function thoughts(ThinkRepository $thinkRepository){
         $thoughts = $thinkRepository->findAll();
@@ -39,6 +39,16 @@ class ThougthsController extends AbstractController
 
 
         return $this->json(['thoughts'=>$thoughts]);
+        
+    }
+
+    #[Route('api/thoughts/delete/{id}',methods:'delete')]
+    public function deleteThink(Think $think,EntityManagerInterface $em){
+
+        $em->remove($think);
+        $em->flush();
+
+        return $this->json(['message'=>'Think deleted !']);
         
     }
 }

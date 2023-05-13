@@ -11,39 +11,44 @@ const Thoughts = () => {
     const [think, setThink] = useState()
     const [thoughts, setThoughts] = useState([])
     const navigate = useNavigate()
+    const serverPort = window.location.hostname === "localhost" ? 80 : 16384
+    const serverName = `http://${window.location.hostname}:${serverPort}` 
 
 
     useEffect(() => {
         fetchThoughts();
+        // eslint-disable-next-line
     }, [])
 
     const sendThink = (() => {
-        axios.post('/api/thoughts/new', think).then((res) => {
+        axios.post(serverName + '/api/thoughts/new', think).then((res) => {
             setThink("")
             setButtonState(true)
             fetchThoughts()
+            
             console.log(res);
         })
     })
 
 
     const fetchThoughts = (() => {
-        axios.get('/api/thoughts/list').then((res) => {
+        axios.get(serverName + '/api/thoughts/list').then((res) => {
             console.log(res.data);
-            setThoughts(res.data.thoughts)
+            console.log(window.location.host);
+            setThoughts(res.data.thoughts.reverse())
         })
     })
 
 
     return (
-        <div>
-            <h2>Your thougths:</h2>
+        <div id='Thoughts'>
+            <h2>Your thoughts:</h2>
             <CustomTextArea setButtonState={setButtonState} think={think} setThink={setThink} />
             <Button onClick={sendThink} variant='contained' disabled={buttonState}>Send</Button>
-            <ul>
+            <ul id='thoughts-list'>
                 {thoughts && (
-                    thoughts.map((el) => {
-                        return <Think think={el} />
+                    thoughts.map((el,key) => {
+                        return <Think think={el} key={key} fetchThoughts={fetchThoughts} serverName={serverName}/>
                     })
                 )}
             </ul>

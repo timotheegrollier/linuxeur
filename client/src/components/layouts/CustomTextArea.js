@@ -52,7 +52,7 @@ export default function CustomTextArea({ setButtonState, think, setThink }) {
       minRows={10}
       onChange={(e) => {
         setThink(e.target.value);
-        if(e.target.value.length > 4){
+        if(e.target.value.length > 2){
           setButtonState(false)
         }else{
           setButtonState(true)

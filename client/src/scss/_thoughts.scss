@@ -1,0 +1,22 @@
+#Thoughts{
+    width: 100%;
+    #thoughts-list{
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .thinkLine{
+            display: grid;
+            grid-template-columns: 15% 20% 15%;
+            align-items: center;
+            justify-items: center;
+            width: 100%;
+            @media screen and (max-width:960px){
+            grid-template-columns: 25% 50% 15%;
+                
+            }
+        }
+    }
+}

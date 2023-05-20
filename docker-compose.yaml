@@ -6,9 +6,9 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: linuxeur
-      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
     volumes:
-      - database_data:/var/lib/mysql
+      - db:/var/lib/mysql
     ports:
       - 3306:3306
 
@@ -22,4 +22,4 @@ services:
       - 90:80
 
 volumes:
-  database_data:
+  db:

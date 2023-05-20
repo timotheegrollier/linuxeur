@@ -9,10 +9,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use Ratchet\Http\HttpServer;
+use Ratchet\Server\IoServer;
+use Ratchet\WebSocket\WsServer;
+use App\WebSocket\Chat;
+use App\WebSocket\Thoughts;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class ThougthsController extends AbstractController
+class ThoughtsController extends AbstractController
 {
     #[Route('/api/thoughts/new', name: 'app_thougths')]
     public function newThink(Request $request,EntityManagerInterface $em): JsonResponse
@@ -49,6 +53,24 @@ class ThougthsController extends AbstractController
         $em->flush();
 
         return $this->json(['message'=>'Think deleted !']);
+        
+    }
+
+    #[Route('/websocket')]
+    public function webSocket(Thoughts $thoughtsSocket){
+
+        $server = IoServer::factory(
+            new HttpServer(
+                new WsServer(
+                    $thoughtsSocket
+                )
+            ),
+            9595 // Port sur lequel le serveur WebSocket écoutera
+        );
+
+        $server->run();
+
+        return $this->json(['success' => true]);
         
     }
 }

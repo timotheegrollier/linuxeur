@@ -7,10 +7,14 @@ use Ratchet\ConnectionInterface;
 class Thoughts implements MessageComponentInterface
 {
     protected $clients;
+    private $timer;
 
     public function __construct() {
         $this->clients = new \SplObjectStorage;
+        date_default_timezone_set('Europe/Paris'); // Définir le fuseau horaire
+        // $this->loop();
     }
+
 
     public function onOpen(ConnectionInterface $conn)
     {
@@ -19,6 +23,7 @@ class Thoughts implements MessageComponentInterface
         $this->clients->attach($conn);
 
         $conn->send('connécté');
+
 
         echo "New connection! ({$conn->resourceId})\n";
     }
@@ -29,9 +34,7 @@ class Thoughts implements MessageComponentInterface
         // Traitez le message reçu et renvoyez la réponse appropriée
         switch ($msg) {
             case 'newMsg' || 'deleted':
-                foreach($this->clients as $client){
-                    $client->send('fetchMsg');
-                }
+                $this->sendMessageToAllClients('fetchMsg');
         }
 
 
@@ -54,7 +57,24 @@ class Thoughts implements MessageComponentInterface
         // Une erreur s'est produite
         // Gérez les erreurs qui se produisent lors des communications WebSocket
     }
+
+
+
+
+    private function sendMessageToAllClients($message)
+    {
+        foreach ($this->clients as $client) {
+            $client->send($message);
+        }
+    }
+
+
+        public function loop(){
+        sleep(60);
+            $time = date('H:i:s') . "\n";
+            echo $time;
+            $this->sendMessageToAllClients($time);
+            $this->loop();
+        
+    }
 }
-
-
-?>
